@@ -3,8 +3,8 @@ const dotenv = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
 
-const userRouter = require('../boilerplate-server-db/routes/user')
-const airRouter = require('../boilerplate-server-db/routes/air')
+const userRouter = require('./routes/user')
+const airRouter = require('./routes/air')
 
 dotenv.config();
 const app = express();

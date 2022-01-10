@@ -9,11 +9,9 @@ router.post("/submit", async (req, res) => {
   try {
 
     const user = await User.findById(body.userId) 
-
     if (user.userToken != body.userToken){
         throw "Invalid token 🥺"
-    }
-    
+    } 
     const airQualitys = await AirQuality.create({
     
     userId: body.userId,
@@ -36,22 +34,35 @@ router.post("/submit", async (req, res) => {
 
 });
 
-router.get("/getAirCondition/:startDate/:endDate", async (req, res) => {
+router.get("/getAirCondition/:city_name/:limit", async (req, res) => {
 
-    const startDate = req.params.startDate;
-    const endDate = req.params.endDate;
-
+    const city_name = req.params.city_name;
+    let limit = req.params.limit
+    if(limit > 10 ) {
+       limit = 10
+    };
   try {
-    
-    const airQualitys = await AirQuality.find({
-        time: { $gte: startDate, $lte: endDate }
-    });
-
+    const airQualitys = await AirQuality.find({city_name}).limit(limit);
     return res.status(200).json(airQualitys)
   } catch (error) {
     return res.status(500).send("Data is not valid 🖕");
   }
 });
 
+router.get("/getAirCondition/:city_name/:startDate/:endDate", async (req, res) => {
+
+    const city_name = req.params.city_name;
+    const startDate = req.params.startDate
+    const endDate = req.params.endDate
+
+  try {
+    const airQualitys = await AirQuality.find({city_name, time: {
+       $gte: startDate, $lte: endDate 
+    }});
+    return res.status(200).json(airQualitys)
+  } catch (error) {
+    return res.status(500).send("Data is not valid 🖕");
+  }
+});
 
 module.exports = router
